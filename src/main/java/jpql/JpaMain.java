@@ -14,18 +14,30 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
             Member member = new Member();
-            member.setUsername("member1");
+            member.setUsername("관리자");
             member.setAge(10);
+            member.setType(MemberType.ADMIN);
+            member.setTeam(team);
             em.persist(member);
+
+
 
             em.flush();
             em.clear();
 
-            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
-            .getResultList();
-            MemberDTO memberDTO = result.get(0);
+            String query = "select size(t.members) from Team t";
+            List<Integer> result = em.createQuery(query, Integer.class)
+                    .getResultList();
+            for (Integer s : result) {
+                System.out.println("s = " + s);
+            }
             tx.commit();
+
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();
