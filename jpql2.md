@@ -80,6 +80,15 @@ List<Member> resultList = em.createNamedQuery("Member.findByUserName", Member.cl
  · 어노테이션, XML에 저의
  · 애플리케이션 로딩 시점에 초기화 후 재사용
  · 애플리케이션 로딩 시점에 쿼리를 검증
+ 
+벌크 연산
+ · JPA 변경 감지 기능을 실행하려면 너무 많은 SQL 실행
+벌크 연산 주의
+ · 벌크 연산은 영속성 컨텍스트를 무시하고 데이터베이스에 직접 쿼리
+  - 벌크 연산을 먼저 실행
+  - 벌크 연산 수행 수 영속성 컨텍스트 초기화
+    int resultCount = em.createQuery("update Member m set m.age = 20")
+            .executeUpdate();  
 
                    
  
