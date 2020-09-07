@@ -39,3 +39,50 @@
  · 페치 조인을 사용할 때만 연관됨 엔티티도 함께 조회(즉시 로딩)
  · 페치 조인은 객체 그래프를 SQL 한번에 조회하는 개념
  
+페치 조인의 특징과 한계
+ · 페치 조인 대상에는 별칭을 줄 수 없다
+ · 둘 이상의 컬렉션은 페치 조인 할 수 없다
+ · 컬렉션을 페치 조인하면 페이징 API를 사용할 수 없다
+ · 연관된 엔티티들을 SQL 한번으로 조회 - 성능 최적화
+ · 엔티티에 직접 적용하는 글로벌 로딩 전략보다 우선함
+ · 실무에서 글로벌 로딩 전략은 모두 지연 로딩
+ · 최적화가 필요한 곳은 페치 조인 적용
+페치 조인 - 정리
+ · 모든 것을 페치 조인으로 해결할 수는 없음
+ · 페치 조인은 객체 그래프를 유지할 때 사용하면 효과적
+
+엔티티 직접 사용 - 기본 키 값
+· JPQL에서 엔티티를 직접 사용하면 SQL에서 해당 엔티티의 기본 키 값을 사용
+    String query = "select m from Member m where m = :member";
+    Member findMember = em.createQuery(query, Member.class)
+            .setParameter("member", member1)
+            .getSingleResult();
+    String query = "select m from Member m where m.id = :memberId";
+    Member findMember = em.createQuery(query, Member.class)
+            .setParameter("memberId", member1.getId())
+            .getSingleResult();   
+엔티티 직접 사용 - 외래 키 값
+    String query = "select m from Member m where m.team = :team";
+    List<Member> members = em.createQuery(query, Member.class)
+            .setParameter("team", teamA)
+            .getResultList();
+            
+Named 쿼리 - 정적 쿼리
+@NamedQuery(
+        name = "Member.findByUserName",
+        query = "select m from Member m where m.username =:username"
+)
+List<Member> resultList = em.createNamedQuery("Member.findByUserName", Member.class)
+        .setParameter("username", "회원1")
+        .getResultList();
+ · 미리 정의해서 이름을 부여해두고 사용하는 JPQL  
+ · 정적 쿼리
+ · 어노테이션, XML에 저의
+ · 애플리케이션 로딩 시점에 초기화 후 재사용
+ · 애플리케이션 로딩 시점에 쿼리를 검증
+
+                   
+ 
+
+
+ 
