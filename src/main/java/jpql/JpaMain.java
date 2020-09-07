@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -15,12 +16,12 @@ public class JpaMain {
         tx.begin();
         try {
             Team team = new Team();
-            team.setName("teamA");
             em.persist(team);
 
             Member member = new Member();
             member.setUsername("관리자");
             member.setAge(10);
+            member.setTeam(team);
             member.setType(MemberType.ADMIN);
             member.setTeam(team);
             em.persist(member);
@@ -30,10 +31,10 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select size(t.members) from Team t";
-            List<Integer> result = em.createQuery(query, Integer.class)
+            String query = "select m from Team t join t.members m";
+            Collection result = em.createQuery(query, Collection.class)
                     .getResultList();
-            for (Integer s : result) {
+            for (Object s : result) {
                 System.out.println("s = " + s);
             }
             tx.commit();
