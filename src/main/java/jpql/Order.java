@@ -6,7 +6,9 @@ import javax.persistence.*;
 @Table(name = "ORDERS")
 public class Order {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
+    @Column(name = "ORDER_ID")
     private Long id;
     private int orderAmount;
     @Embedded
@@ -37,13 +39,5 @@ public class Order {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 }
